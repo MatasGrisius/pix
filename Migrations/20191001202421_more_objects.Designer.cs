@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using pix.Entities;
 
 namespace pix.Migrations
 {
     [DbContext(typeof(PixDbContext))]
-    partial class PixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191001202421_more_objects")]
+    partial class more_objects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +31,7 @@ namespace pix.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PictureId")
+                    b.Property<int?>("PictureId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -44,7 +46,7 @@ namespace pix.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("pix.Entities.Picture", b =>
@@ -68,49 +70,7 @@ namespace pix.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pictures");
-                });
-
-            modelBuilder.Entity("pix.Entities.Tag", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Tag");
-                });
-
-            modelBuilder.Entity("pix.Entities.TagCounter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("PictureId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UsersId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PictureId");
-
-                    b.HasIndex("TagId");
-
-                    b.HasIndex("UsersId");
-
-                    b.ToTable("TagCounters");
+                    b.ToTable("Picture");
                 });
 
             modelBuilder.Entity("pix.Entities.User", b =>
@@ -143,35 +103,18 @@ namespace pix.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("pix.Entities.Comment", b =>
                 {
                     b.HasOne("pix.Entities.Picture", "Picture")
                         .WithMany("Comments")
-                        .HasForeignKey("PictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PictureId");
 
                     b.HasOne("pix.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("pix.Entities.TagCounter", b =>
-                {
-                    b.HasOne("pix.Entities.Picture", "Picture")
-                        .WithMany()
-                        .HasForeignKey("PictureId");
-
-                    b.HasOne("pix.Entities.Tag", "Tag")
-                        .WithMany()
-                        .HasForeignKey("TagId");
-
-                    b.HasOne("pix.Entities.User", "Users")
-                        .WithMany()
-                        .HasForeignKey("UsersId");
                 });
 #pragma warning restore 612, 618
         }

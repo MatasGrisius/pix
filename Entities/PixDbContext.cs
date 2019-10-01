@@ -14,5 +14,9 @@ namespace pix.Entities
         }
 
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<TagCounter> TagCounters { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<Tag> Tag { get; set; }
     }
 }

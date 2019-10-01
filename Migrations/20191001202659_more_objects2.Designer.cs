@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using pix.Entities;
 
 namespace pix.Migrations
 {
     [DbContext(typeof(PixDbContext))]
-    partial class PixDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191001202659_more_objects2")]
+    partial class more_objects2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +31,7 @@ namespace pix.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("PictureId")
+                    b.Property<int?>("PictureId")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
@@ -150,9 +152,7 @@ namespace pix.Migrations
                 {
                     b.HasOne("pix.Entities.Picture", "Picture")
                         .WithMany("Comments")
-                        .HasForeignKey("PictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PictureId");
 
                     b.HasOne("pix.Entities.User", "User")
                         .WithMany()

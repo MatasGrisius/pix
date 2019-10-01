@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace pix.Entities
 {
-    public class Picture
+    public class Comment
     {
         [Key]
         public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Content { get; set; }
-        public List<Comment> Comments { get; set; }
+        public string Text { get; set; }
+        public Picture Picture { get; set; }
+        public int PictureId { get; set; }
+        public User User { get; set; }
+        public int UserId { get; set; }
         public DateTime Created { get; set; }
     }
 }
