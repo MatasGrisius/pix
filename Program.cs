@@ -21,7 +21,7 @@ namespace pix
         {
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:4000");
+                .UseUrls("http://namupc.tk");
         }
     }
 }

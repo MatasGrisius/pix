@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as PicturesStore from '../store/Pictures';
-import { actionCreators } from './../store/WeatherForecasts';
+import { actionCreators } from '../store/WeatherForecasts';
 import { thisExpression } from '@babel/types';
 
 
-class Home extends React.Component<any> {
+class Photo extends React.Component<any> {
   componentDidMount = () => {
-    this.props.fetchPictures();
-    console.log(this.props)
+    this.props.fetchPicture();
   }
 
   render = () => 
@@ -71,4 +70,4 @@ class Home extends React.Component<any> {
 export default connect(
   (state) => state["pictures"], // Selects which state properties are merged into the component's props
   PicturesStore.actionCreators // Selects which action creators are merged into the component's props
-)(Home);
+)(Photo);

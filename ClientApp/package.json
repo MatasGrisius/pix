@@ -46,7 +46,20 @@
     "lint": "eslint ./src/**/*.ts ./src/**/*.tsx"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "jsx-a11y/anchor-is-valid": 0
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/*.ts?(x)"
+        ],
+        "rules": {
+          "jsx-a11y/anchor-is-valid": 0
+        }
+      }
+    ]
   },
   "browserslist": [
     ">0.2%",
