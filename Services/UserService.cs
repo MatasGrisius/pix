@@ -24,7 +24,7 @@ namespace pix.Services
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private List<User> _users = new List<User>
         {
-            new User { Id = 1, FirstName = "Admin", LastName = "User", Username = "admin", Password = "admin", Role = Role.Admin },
+            new User { Id = 1, FirstName = "Admin", LastName = "User", Username = "admin", Password = "203b70b5ae883932161bbd0bded9357e763e63afce98b16230be33f0b94c2cc5", Role = Role.Admin },
             new User { Id = 2, FirstName = "Normal", LastName = "User", Username = "user", Password = "user", Role = Role.User }
         };
 
@@ -85,7 +85,7 @@ namespace pix.Services
             return user;
         }
 
-        static string ComputeSha256Hash(string rawData)
+        public static string ComputeSha256Hash(string rawData)
         {
             // Create a SHA256   
             using (SHA256 sha256Hash = SHA256.Create())

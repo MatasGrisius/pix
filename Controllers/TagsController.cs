@@ -22,9 +22,9 @@ namespace pix.Controllers
 
         // GET: api/Tags
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tag>>> GetTag()
+        public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
-            return await _context.Tag.ToListAsync();
+            return Ok(await _context.Tag.ToListAsync());
         }
 
         // GET: api/Tags/5
@@ -38,7 +38,7 @@ namespace pix.Controllers
                 return NotFound();
             }
 
-            return tag;
+            return Ok(tag);
         }
 
         // PUT: api/Tags/5
@@ -52,25 +52,17 @@ namespace pix.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(tag).State = EntityState.Modified;
-
-            try
+            var tagFromDb = _context.Tag.FirstOrDefault(x => x.Id == id);
+            if (tagFromDb != null)
             {
+                tagFromDb.Name = tag.Name;
                 await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!TagExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
-
-            return NoContent();
         }
 
         // POST: api/Tags
@@ -79,10 +71,17 @@ namespace pix.Controllers
         [HttpPost]
         public async Task<ActionResult<Tag>> PostTag(Tag tag)
         {
-            _context.Tag.Add(tag);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Tag.Add(tag);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTag", new { id = tag.Id }, tag);
+                return CreatedAtAction("GetTags", new { id = tag.Id }, tag);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Tags/5
@@ -99,11 +98,6 @@ namespace pix.Controllers
             await _context.SaveChangesAsync();
 
             return tag;
-        }
-
-        private bool TagExists(int id)
-        {
-            return _context.Tag.Any(e => e.Id == id);
         }
     }
 }

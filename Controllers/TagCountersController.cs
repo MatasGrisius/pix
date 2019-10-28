@@ -24,7 +24,7 @@ namespace pix.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TagCounter>>> GetTagCounters()
         {
-            return await _context.TagCounters.ToListAsync();
+            return Ok(await _context.TagCounters.ToListAsync());
         }
 
         // GET: api/TagCounters/5
@@ -38,39 +38,42 @@ namespace pix.Controllers
                 return NotFound();
             }
 
-            return tagCounter;
+            return Ok(tagCounter);
         }
 
         // PUT: api/TagCounters/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTagCounter(int id, TagCounter tagCounter)
+        public async Task<ActionResult> PutTagCounter(int id, TagCounter tagCounter)
         {
-            if (id != tagCounter.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(tagCounter).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TagCounterExists(id))
+                if (id != tagCounter.Id)
                 {
-                    return NotFound();
+                    return BadRequest();
+                }
+
+                var tagCounterFromDb = _context.TagCounters.FirstOrDefault(x => x.Id == id);
+                if (tagCounterFromDb != null)
+                {
+                    tagCounterFromDb.Picture = tagCounter.Picture;
+                    tagCounterFromDb.PictureId = tagCounter.PictureId;
+                    tagCounterFromDb.Tag = tagCounter.Tag;
+                    tagCounterFromDb.TagId = tagCounter.TagId;
+                    tagCounterFromDb.Users = tagCounter.Users;
+                    await _context.SaveChangesAsync();
+                    return Ok();
                 }
                 else
                 {
-                    throw;
+                    return NotFound();
                 }
             }
-
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // POST: api/TagCounters
@@ -79,10 +82,17 @@ namespace pix.Controllers
         [HttpPost]
         public async Task<ActionResult<TagCounter>> PostTagCounter(TagCounter tagCounter)
         {
-            _context.TagCounters.Add(tagCounter);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.TagCounters.Add(tagCounter);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetTagCounter", new { id = tagCounter.Id }, tagCounter);
+                return CreatedAtAction("GetTagCounters", new { id = tagCounter.Id }, tagCounter);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/TagCounters/5
@@ -99,11 +109,6 @@ namespace pix.Controllers
             await _context.SaveChangesAsync();
 
             return tagCounter;
-        }
-
-        private bool TagCounterExists(int id)
-        {
-            return _context.TagCounters.Any(e => e.Id == id);
         }
     }
 }

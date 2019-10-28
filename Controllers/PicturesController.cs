@@ -24,7 +24,7 @@ namespace pix.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Picture>>> GetPictures()
         {
-            return await _context.Pictures.ToListAsync();
+            return Ok(await _context.Pictures.ToListAsync());
         }
 
         // GET: api/Pictures/5
@@ -38,39 +38,41 @@ namespace pix.Controllers
                 return NotFound();
             }
 
-            return picture;
+            return Ok(picture);
         }
 
         // PUT: api/Pictures/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPicture(int id, Picture picture)
+        public async Task<ActionResult> PutPicture(int id, Picture picture)
         {
-            if (id != picture.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(picture).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PictureExists(id))
+                if (id != picture.Id)
                 {
-                    return NotFound();
+                    return BadRequest();
+                }
+
+                var pictureFromDb = _context.Pictures.FirstOrDefault(x => x.Id == id);
+                if (pictureFromDb != null)
+                {
+                    pictureFromDb.Name = picture.Name;
+                    pictureFromDb.Content = picture.Content;
+                    pictureFromDb.Created = picture.Created;
+                    pictureFromDb.Description = picture.Description;
+                    pictureFromDb.Comments = picture.Comments;
+                    await _context.SaveChangesAsync();
+                    return Ok();
                 }
                 else
                 {
-                    throw;
+                    return NotFound();
                 }
+            } catch (Exception e)
+            {
+                return BadRequest();
             }
-
-            return NoContent();
         }
 
         // POST: api/Pictures
@@ -79,10 +81,17 @@ namespace pix.Controllers
         [HttpPost]
         public async Task<ActionResult<Picture>> PostPicture(Picture picture)
         {
-            _context.Pictures.Add(picture);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Pictures.Add(picture);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetPicture", new { id = picture.Id }, picture);
+                return CreatedAtAction("GetPicture", new { id = picture.Id }, picture);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Pictures/5
@@ -99,11 +108,6 @@ namespace pix.Controllers
             await _context.SaveChangesAsync();
 
             return picture;
-        }
-
-        private bool PictureExists(int id)
-        {
-            return _context.Pictures.Any(e => e.Id == id);
         }
     }
 }

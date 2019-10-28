@@ -24,7 +24,7 @@ namespace pix.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
-            return await _context.Comments.ToListAsync();
+            return Ok(await _context.Comments.ToListAsync());
         }
 
         // GET: api/Comments/5
@@ -38,39 +38,42 @@ namespace pix.Controllers
                 return NotFound();
             }
 
-            return comment;
+            return Ok(comment);
         }
 
         // PUT: api/Comments/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutComment(int id, Comment comment)
+        public async Task<ActionResult> PutComment(int id, Comment comment)
         {
-            if (id != comment.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(comment).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CommentExists(id))
+                if (id != comment.Id)
                 {
-                    return NotFound();
+                    return BadRequest();
+                }
+
+                var pictureFromDb = _context.Comments.FirstOrDefault(x => x.Id == id);
+                if (pictureFromDb != null)
+                {
+                    pictureFromDb.Text = comment.Text;
+                    pictureFromDb.UserId = comment.UserId;
+                    pictureFromDb.Created = comment.Created;
+                    pictureFromDb.Picture = comment.Picture;
+                    pictureFromDb.PictureId = comment.PictureId;
+                    await _context.SaveChangesAsync();
+                    return Ok();
                 }
                 else
                 {
-                    throw;
+                    return NotFound();
                 }
             }
-
-            return NoContent();
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // POST: api/Comments
@@ -79,10 +82,17 @@ namespace pix.Controllers
         [HttpPost]
         public async Task<ActionResult<Comment>> PostComment(Comment comment)
         {
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetComment", new { id = comment.Id }, comment);
+                return CreatedAtAction("GetComments", new { id = comment.Id }, comment);
+            }
+            catch (Exception e)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE: api/Comments/5
@@ -99,11 +109,6 @@ namespace pix.Controllers
             await _context.SaveChangesAsync();
 
             return comment;
-        }
-
-        private bool CommentExists(int id)
-        {
-            return _context.Comments.Any(e => e.Id == id);
         }
     }
 }
