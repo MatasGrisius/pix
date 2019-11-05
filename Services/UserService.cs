@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using pix.Entities;
@@ -21,23 +22,29 @@ namespace pix.Services
 
     public class UserService : IUserService
     {
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<User> _users = new List<User>
+        /*private List<User> _users = new List<User>
         {
-            new User { Id = 1, FirstName = "Admin", LastName = "User", Username = "admin", Password = "203b70b5ae883932161bbd0bded9357e763e63afce98b16230be33f0b94c2cc5", Role = Role.Admin },
-            new User { Id = 2, FirstName = "Normal", LastName = "User", Username = "user", Password = "user", Role = Role.User }
-        };
+            new User { Id = 1, Username = "admin", Password = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918", Role = Role.Admin },
+            new User { Id = 2, Username = "user", Password = "04f8996da763b7a969b1028ee3007569eaf3a635486ddab211d512c85b9df8fb", Role = Role.User }
+        };*/
 
         private readonly AppSettings _appSettings;
+        PixDbContext _context;
 
-        public UserService(IOptions<AppSettings> appSettings)
+        public UserService(PixDbContext ctx, IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
+            _context = ctx;
         }
 
         public User Authenticate(string username, string password)
         {
-            var user = _users.SingleOrDefault(x => x.Username == username && x.Password == ComputeSha256Hash(password));
+            if (username == null || password == null)
+            {
+                return null;
+            }
+
+            var user = _context.Users.SingleOrDefault(x => x.Username == username && x.Password == ComputeSha256Hash(password));
 
             // return null if user not found
             if (user == null)
@@ -53,7 +60,7 @@ namespace pix.Services
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -68,7 +75,7 @@ namespace pix.Services
         public IEnumerable<User> GetAll()
         {
             // return users without passwords
-            return _users.Select(x => {
+            return _context.Users.ToList().Select(x => {
                 x.Password = null;
                 return x;
             });
@@ -76,7 +83,7 @@ namespace pix.Services
 
         public User GetById(int id)
         {
-            var user = _users.FirstOrDefault(x => x.Id == id);
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
 
             // return user without password
             if (user != null)

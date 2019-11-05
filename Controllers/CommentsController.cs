@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using pix.Entities;
 
 namespace pix.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CommentsController : ControllerBase
@@ -54,14 +56,14 @@ namespace pix.Controllers
                     return BadRequest();
                 }
 
-                var pictureFromDb = _context.Comments.FirstOrDefault(x => x.Id == id);
-                if (pictureFromDb != null)
+                var commentFromDb = _context.Comments.FirstOrDefault(x => x.Id == id);
+                if (commentFromDb != null)
                 {
-                    pictureFromDb.Text = comment.Text;
-                    pictureFromDb.UserId = comment.UserId;
-                    pictureFromDb.Created = comment.Created;
-                    pictureFromDb.Picture = comment.Picture;
-                    pictureFromDb.PictureId = comment.PictureId;
+                    commentFromDb.Text = comment.Text;
+                    commentFromDb.User = comment.User;
+                    commentFromDb.UserId = comment.UserId;
+                    commentFromDb.Picture = comment.Picture;
+                    commentFromDb.PictureId = comment.PictureId;
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
@@ -84,6 +86,7 @@ namespace pix.Controllers
         {
             try
             {
+                comment.Created = DateTime.Now;
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
 

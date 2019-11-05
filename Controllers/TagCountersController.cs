@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using pix.Entities;
 
 namespace pix.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TagCountersController : ControllerBase
@@ -61,7 +63,8 @@ namespace pix.Controllers
                     tagCounterFromDb.PictureId = tagCounter.PictureId;
                     tagCounterFromDb.Tag = tagCounter.Tag;
                     tagCounterFromDb.TagId = tagCounter.TagId;
-                    tagCounterFromDb.Users = tagCounter.Users;
+                    tagCounterFromDb.User = tagCounter.User;
+                    tagCounterFromDb.UserId = tagCounter.UserId;
                     await _context.SaveChangesAsync();
                     return Ok();
                 }

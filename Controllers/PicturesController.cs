@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using pix.Entities;
 
 namespace pix.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PicturesController : ControllerBase
@@ -22,6 +24,7 @@ namespace pix.Controllers
 
         // GET: api/Pictures
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Picture>>> GetPictures()
         {
             return Ok(await _context.Pictures.ToListAsync());
@@ -59,7 +62,7 @@ namespace pix.Controllers
                 {
                     pictureFromDb.Name = picture.Name;
                     pictureFromDb.Content = picture.Content;
-                    pictureFromDb.Created = picture.Created;
+                    pictureFromDb.Created = DateTime.Now;
                     pictureFromDb.Description = picture.Description;
                     pictureFromDb.Comments = picture.Comments;
                     await _context.SaveChangesAsync();
@@ -83,6 +86,7 @@ namespace pix.Controllers
         {
             try
             {
+                picture.Created = DateTime.Now;
                 _context.Pictures.Add(picture);
                 await _context.SaveChangesAsync();
 

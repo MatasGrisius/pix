@@ -29,8 +29,8 @@ namespace pix.Controllers
             return Ok(user);
         }
 
-        [Authorize(Roles = Role.Admin)]
         [HttpGet]
+        [Authorize(Roles = Role.Admin)]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();

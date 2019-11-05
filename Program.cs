@@ -20,8 +20,7 @@ namespace pix
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .UseUrls("http://namupc.tk");
+                .UseStartup<Startup>();
         }
     }
 }

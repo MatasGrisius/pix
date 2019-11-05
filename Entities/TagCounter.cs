@@ -11,9 +11,13 @@ namespace pix.Entities
         [Key]
         public int Id { get; set; }
         public Tag Tag { get; set; }
+        [Required]
         public int TagId { get; set; }
         public Picture Picture { get; set; }
+        [Required]
         public int PictureId { get; set; }
-        public User Users { get; set; }
+        public User User { get; set; }
+        [Required]
+        public int UserId { get; set; }
     }
 }
