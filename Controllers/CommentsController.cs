@@ -24,6 +24,7 @@ namespace pix.Controllers
 
         // GET: api/Comments
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Comment>>> GetComments()
         {
             return Ok(await _context.Comments.ToListAsync());
@@ -31,6 +32,7 @@ namespace pix.Controllers
 
         // GET: api/Comments/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Comment>> GetComment(int id)
         {
             var comment = await _context.Comments.FindAsync(id);

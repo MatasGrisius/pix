@@ -32,6 +32,7 @@ namespace pix.Controllers
 
         // GET: api/Pictures/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<Picture>> GetPicture(int id)
         {
             var picture = await _context.Pictures.FindAsync(id);

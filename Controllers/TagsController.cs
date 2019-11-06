@@ -71,6 +71,7 @@ namespace pix.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<Tag>> PostTag(Tag tag)
         {
             try

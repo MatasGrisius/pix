@@ -24,6 +24,7 @@ namespace pix.Controllers
 
         // GET: api/TagCounters
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<TagCounter>>> GetTagCounters()
         {
             return Ok(await _context.TagCounters.ToListAsync());
@@ -31,6 +32,7 @@ namespace pix.Controllers
 
         // GET: api/TagCounters/5
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<TagCounter>> GetTagCounter(int id)
         {
             var tagCounter = await _context.TagCounters.FindAsync(id);
@@ -83,6 +85,7 @@ namespace pix.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
+        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<TagCounter>> PostTagCounter(TagCounter tagCounter)
         {
             try

@@ -1,0 +1,347 @@
+{
+	"info": {
+		"_postman_id": "60a21ace-2df8-42d9-91f3-48db907d2c97",
+		"name": "Pix",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "pictures: getAll()",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/pictures"
+			},
+			"response": []
+		},
+		{
+			"name": "pictures: get(id)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/pictures/2"
+			},
+			"response": []
+		},
+		{
+			"name": "pictures: post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjYiLCJyb2xlIjoiVXNlciIsIm5iZiI6MTU3MzAzNTY2MiwiZXhwIjoxNTczMDM3NDYyLCJpYXQiOjE1NzMwMzU2NjJ9.Oq_37Z57jMm7-MywA-zb9btzLc013kXN_qX3eHSYri4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"content\": \"content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/pictures"
+			},
+			"response": []
+		},
+		{
+			"name": "pictures: put",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 2,\n\t\"content\": \"content\",\n\t\"created\": \"2010-05-30\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/pictures/2"
+			},
+			"response": []
+		},
+		{
+			"name": "pictures: delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/pictures/4"
+			},
+			"response": []
+		},
+		{
+			"name": "comment: getAll()",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/comments"
+			},
+			"response": []
+		},
+		{
+			"name": "comment get(id)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/comments/5"
+			},
+			"response": []
+		},
+		{
+			"name": "comment: post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"text\": \"text\",\n\t\"userId\": 1,\n\t\"pictureId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/comments"
+			},
+			"response": []
+		},
+		{
+			"name": "comment: put",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 5,\n\t\"text\": \"text\",\n\t\"userId\": 1,\n\t\"pictureId\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/comments/5"
+			},
+			"response": []
+		},
+		{
+			"name": "comment: delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/comments/8"
+			},
+			"response": []
+		},
+		{
+			"name": "tagcounters: getAll()",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/tagcounters"
+			},
+			"response": []
+		},
+		{
+			"name": "tagcounters: get(id)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "namupc.tk/api/tagcounters/5"
+			},
+			"response": []
+		},
+		{
+			"name": "tagcounters: post",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"pictureId\": 2,\n\t\"tagId\": 1,\n\t\"userId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/tagcounters"
+			},
+			"response": []
+		},
+		{
+			"name": "tagcounters: put",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 5,\n\t\"text\": \"text\",\n\t\"userId\": 1,\n\t\"pictureId\": 2,\n\t\"tagId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/tagcounters/5"
+			},
+			"response": []
+		},
+		{
+			"name": "tagcounters: delete",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/tagcounters/8"
+			},
+			"response": []
+		},
+		{
+			"name": "login admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/users/authenticate"
+			},
+			"response": []
+		},
+		{
+			"name": "login user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"user\",\n\t\"password\": \"user\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "namupc.tk/api/users/authenticate"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
