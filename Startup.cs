@@ -1,20 +1,20 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using pix.Entities;
 using pix.Helpers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using pix.Services;
 using System;
-using Microsoft.AspNetCore.Identity;
+using System.Text;
 
 namespace pix
 {
@@ -39,7 +39,10 @@ namespace pix
             });
 
             services.AddCors();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc(option => option.EnableEndpointRouting = false)
+               .AddNewtonsoftJson(options =>
+                         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
+               .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -86,7 +89,7 @@ namespace pix
             }
 
             app.UseHttpsRedirection();
-            app.UseSpaStaticFiles();
+            //app.UseSpaStaticFiles();
             app.UseStaticFiles();
             app.UseRouting();
             app.UseCors(x => x
@@ -102,7 +105,7 @@ namespace pix
                 endpoints.MapControllers();
             });
 
-            app.UseSpa(spa =>
+            /*app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
 
@@ -110,7 +113,7 @@ namespace pix
                 {
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
-            });
+            });*/
         }
     }
 }

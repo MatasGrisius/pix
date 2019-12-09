@@ -64,7 +64,6 @@ namespace pix.Controllers
                     commentFromDb.Text = comment.Text;
                     commentFromDb.User = comment.User;
                     commentFromDb.UserId = comment.UserId;
-                    commentFromDb.Picture = comment.Picture;
                     commentFromDb.PictureId = comment.PictureId;
                     await _context.SaveChangesAsync();
                     return Ok();

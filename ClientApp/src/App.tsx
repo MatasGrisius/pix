@@ -6,11 +6,15 @@ import FetchData from './components/FetchData';
 
 import './custom.css'
 import Photo from './components/Photo';
+import Login from './components/Login';
+import EditPhoto from './components/EditPhoto';
 
 export default () => (
     <Layout>
         <Route exact path='/' component={Home} />
-        <Route exact path='/photo:{id}/' component={Photo} />
+        <Route path='/photo/:id' component={Photo} />
+        <Route exact path='/login' component={Login} />
+        <Route path='/editphoto/:id?' component={EditPhoto} />
         <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
     </Layout>
 );

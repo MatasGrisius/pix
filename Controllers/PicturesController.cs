@@ -42,6 +42,7 @@ namespace pix.Controllers
                 return NotFound();
             }
 
+            _context.Entry(picture).Collection(e => e.Comments).Load();
             return Ok(picture);
         }
 
