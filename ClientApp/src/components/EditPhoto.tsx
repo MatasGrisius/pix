@@ -49,6 +49,9 @@ class EditPhoto extends React.Component<any> {
       }
       this.props.editPicture(this.props.match.params.id, picture);  
     } else {
+      if (picture.content == "data:") {
+        picture.content = "";
+      }
       this.props.addPicture(picture);
     }
   };

@@ -153,7 +153,7 @@ namespace pix.Migrations
                     b.HasOne("pix.Entities.Picture", null)
                         .WithMany("Comments")
                         .HasForeignKey("PictureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("pix.Entities.User", "User")

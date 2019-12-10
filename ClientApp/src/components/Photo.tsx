@@ -71,7 +71,7 @@ class Photo extends React.Component<any> {
               <CardText>
                 {picture.description}
               </CardText>
-              <Button onClick={() => this.props.history.push('/photo/' + picture.id)}>Edit</Button>
+              <Button onClick={() => this.props.history.push('/editphoto/' + picture.id)}>Edit</Button>
               <Button onClick={() => this.props.deletePicture(picture.id)}>Delete</Button>
             </CardBody>
           </Card>

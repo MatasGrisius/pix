@@ -49,11 +49,6 @@ class NavMenu extends React.Component<any> {
                   <NavLink tag={Link} className="text-dark" to="/editphoto">
                   Add new photo
                 </NavLink>}
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/counter">
-                    Counter
-                  </NavLink>
-                </NavItem>
                 {this.props.account == null &&
                   <NavItem>
                     <NavLink tag={Link} className="text-dark" to="/login">

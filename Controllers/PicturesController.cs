@@ -110,6 +110,7 @@ namespace pix.Controllers
                 return NotFound();
             }
 
+            await _context.Comments.Where(e => e.PictureId == id).ForEachAsync(e => _context.Comments.Remove(e));
             _context.Pictures.Remove(picture);
             await _context.SaveChangesAsync();
 
