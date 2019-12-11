@@ -88,6 +88,7 @@ namespace pix.Controllers
             try
             {
                 comment.Created = DateTime.Now;
+                comment.UserId = int.Parse(User.Identity.Name);
                 _context.Comments.Add(comment);
                 await _context.SaveChangesAsync();
 

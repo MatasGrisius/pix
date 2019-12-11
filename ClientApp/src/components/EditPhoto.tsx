@@ -19,6 +19,10 @@ import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
 import { bindActionCreators } from "redux";
 import FormText from "reactstrap/lib/FormText";
+import Breadcrumb from "reactstrap/lib/Breadcrumb";
+import BreadcrumbItem from "reactstrap/lib/BreadcrumbItem";
+import { history } from "..";
+import Swal from "sweetalert2";
 
 class EditPhoto extends React.Component<any> {
   constructor(props) {
@@ -47,12 +51,29 @@ class EditPhoto extends React.Component<any> {
           e => e.id == this.props.match.params.id
         )[0].content;
       }
-      this.props.editPicture(this.props.match.params.id, picture);  
     } else {
       if (picture.content == "data:") {
         picture.content = "";
       }
-      this.props.addPicture(picture);
+    }
+    if (picture.name.length == "") {
+      Swal.fire(
+        "Validation error...",
+        "Please input name",
+        "error"
+      );
+    } else if (picture.content == "") {
+      Swal.fire(
+        "Validation error...",
+        "Please input photo",
+        "error"
+      );
+    } else {
+      if (this.props.match.params.id) {
+        this.props.editPicture(this.props.match.params.id, picture);
+      } else {
+        this.props.addPicture(picture);
+      }
     }
   };
 
@@ -83,6 +104,16 @@ class EditPhoto extends React.Component<any> {
     }
     return (
       <div>
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <a onClick={() => history.push("/")} href="javascript:void()">
+              Home
+            </a>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            {this.props.match.params.id ? "Edit photo" : "Add photo"}
+          </BreadcrumbItem>
+        </Breadcrumb>
         <Form onSubmit={this.submitForm}>
           <FormGroup>
             <Label for="name">Name</Label>
@@ -108,10 +139,14 @@ class EditPhoto extends React.Component<any> {
             <Label for="file">Image</Label>
             <Input type="file" name="file" id="file" />
             <FormText color="muted">
-              {picture.content && <React.Fragment>Leave file input empty in order to leave old image file unchanged</React.Fragment>}
+              {picture.content &&
+                <React.Fragment>
+                  Leave file input empty in order to leave old image file
+                  unchanged
+                </React.Fragment>}
             </FormText>
           </FormGroup>
-          <Button>Upload new picture</Button>
+          <Button>{this.props.match.params.id ? "Edit photo" : "Upload new picture"}</Button>
         </Form>
       </div>
     );

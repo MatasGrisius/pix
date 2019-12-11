@@ -30,7 +30,6 @@ namespace pix.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Role.Admin)]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();

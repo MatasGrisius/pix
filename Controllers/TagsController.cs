@@ -24,6 +24,7 @@ namespace pix.Controllers
 
         // GET: api/Tags
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Tag>>> GetTags()
         {
             return Ok(await _context.Tag.ToListAsync());
@@ -47,6 +48,7 @@ namespace pix.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+        [Authorize(Roles = Role.Admin)]
         public async Task<IActionResult> PutTag(int id, Tag tag)
         {
             if (id != tag.Id)
@@ -89,6 +91,7 @@ namespace pix.Controllers
 
         // DELETE: api/Tags/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = Role.Admin)]
         public async Task<ActionResult<Tag>> DeleteTag(int id)
         {
             var tag = await _context.Tag.FindAsync(id);

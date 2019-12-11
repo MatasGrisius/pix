@@ -4,7 +4,7 @@ import { history } from "./../index";
 
 export const actionCreators = {
   login: (username, psw) => (dispatch, getState) => {
-    fetch(`https://localhost:44339/api/users/authenticate`, {
+    fetch(`http://namupc.tk:5000/api/users/authenticate`, {
       method: "POST",
       body: JSON.stringify({ username, password: psw }),
       headers: {
@@ -20,7 +20,8 @@ export const actionCreators = {
       })
       .then(data => {
         console.log(data);
-        dispatch({ type: "loggedIn", data });
+        localStorage.setItem('account', JSON.stringify(data));
+        dispatch({ type: "loggedIn" });
         history.push("/");
       })
       .catch(err => {
@@ -28,6 +29,7 @@ export const actionCreators = {
       });
   },
   logout: () => (dispatch, getState) => {
+    localStorage.removeItem('account');
     dispatch({ type: "logout" });
   },
 };
@@ -39,7 +41,7 @@ export const reducer: Reducer = (state, action) => {
 
   switch (action.type) {
     case "loggedIn":
-      return { account: action.data };
+      return { account: JSON.parse(localStorage.getItem('account')) };
     case "logout":
       return { account: null };
     default:

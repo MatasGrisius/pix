@@ -43,6 +43,11 @@ namespace pix.Controllers
             }
 
             _context.Entry(picture).Collection(e => e.Comments).Load();
+            _context.Entry(picture).Collection(e => e.TagCounters).Load();
+            for (int i = 0; i<picture.Comments.Count; i++)
+            {
+                picture.Comments[i].User = _context.Users.Where(e => e.Id == picture.Comments[i].UserId).FirstOrDefault();
+            }
             return Ok(picture);
         }
 

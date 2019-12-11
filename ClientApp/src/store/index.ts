@@ -3,6 +3,8 @@ import * as Counter from './Counter';
 import * as Pictures from './Pictures';
 import * as Comments from './Comments';
 import * as Account from './Account';
+import * as Tags from './Tags';
+import { taggedTemplateExpression } from '@babel/types';
 
 // The top-level state object
 export interface ApplicationState {
@@ -10,7 +12,8 @@ export interface ApplicationState {
     weatherForecasts: WeatherForecasts.WeatherForecastsState | undefined,
     pictures,
     comments,
-    account
+    account,
+    tags
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -22,6 +25,7 @@ export const reducers = {
     pictures: Pictures.reducer,
     comments: Comments.reducer,
     account: Account.reducer,
+    tags: Tags.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

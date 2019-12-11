@@ -38,7 +38,14 @@ namespace pix
                 configuration.RootPath = "ClientApp/build";
             });
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.SetIsOriginAllowed((host) => true)
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials());
+            });
             services.AddMvc(option => option.EnableEndpointRouting = false)
                .AddNewtonsoftJson(options =>
                          options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore)
@@ -88,14 +95,11 @@ namespace pix
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             //app.UseSpaStaticFiles();
+            app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
 
             app.UseAuthentication();
             app.UseAuthorization();

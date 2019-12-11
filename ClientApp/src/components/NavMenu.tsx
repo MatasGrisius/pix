@@ -11,10 +11,9 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
-import { withSwalInstance } from "sweetalert2-react";
-import swal from "sweetalert2";
 import { connect } from "react-redux";
 import * as AccountStore from "../store/Account";
+import svg from '../excercise.svg';
 
 class NavMenu extends React.Component<any> {
   public state = {
@@ -31,7 +30,7 @@ class NavMenu extends React.Component<any> {
         >
           <Container>
             <NavbarBrand tag={Link} to="/">
-              pix
+              <img src ={svg} height={30}></img> pix
             </NavbarBrand>
             <NavbarToggler onClick={this.toggle} className="mr-2" />
             <Collapse
@@ -48,6 +47,10 @@ class NavMenu extends React.Component<any> {
                 {this.props.account != null &&
                   <NavLink tag={Link} className="text-dark" to="/editphoto">
                   Add new photo
+                </NavLink>}
+                {this.props.account && this.props.account.role == "admin" &&
+                  <NavLink tag={Link} className="text-dark" to="/managetags">
+                  Manage tags list
                 </NavLink>}
                 {this.props.account == null &&
                   <NavItem>

@@ -2,8 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import * as PicturesStore from "../store/Pictures";
 import * as CommentsStore from "../store/Comments";
-import { actionCreators } from "../store/WeatherForecasts";
-import { thisExpression } from "@babel/types";
+import * as TagsStore from "../store/Tags";
 import Card from "reactstrap/lib/Card";
 import CardImg from "reactstrap/lib/CardImg";
 import CardBody from "reactstrap/lib/CardBody";
@@ -17,24 +16,94 @@ import FormGroup from "reactstrap/lib/FormGroup";
 import Form from "reactstrap/lib/Form";
 import Label from "reactstrap/lib/Label";
 import Input from "reactstrap/lib/Input";
-import { bindActionCreators } from "redux";
+import Breadcrumb from "reactstrap/lib/Breadcrumb";
+import BreadcrumbItem from "reactstrap/lib/BreadcrumbItem";
+import { history } from "./../index";
+import ta from "time-ago";
 
 class Photo extends React.Component<any> {
   constructor(props) {
     super(props);
-    this.state = "";
+    this.state = {
+      newcomment: "",
+      beingedited: -1,
+    };
   }
 
   componentDidMount = () => {
     console.log("loading pictures");
     this.props.fetchPicture(this.props.match.params.id);
+    this.props.fetchTags();
   };
 
-  submitForm = (event) => {
+  submitForm = event => {
     event.preventDefault();
     const data = new FormData(event.target);
-    this.props.postComment(this.props.match.params.id, data.get('text'));
-  }
+    this.props.postComment(this.props.match.params.id, data.get("text"));
+    this.setState({ newComment: "" });
+  };
+
+  findWithAttr = (array, attr, value) => {
+    for (var i = 0; i < array.length; i += 1) {
+      if (array[i][attr] === value) {
+        return i;
+      }
+    }
+    return -1;
+  };
+
+  commentRender = (picture, e) =>
+    <Media
+      style={{
+        backgroundColor: "#ccf2ff",
+        border: "1px black solid",
+        borderRadius: "5px",
+      }}
+      key={e.id}
+    >
+      <Media body>
+        <Media heading>
+          <div>
+            {e.user.username} <span style={{fontSize: 16}} className="text-muted">{ta.ago(e.created)}</span> 
+          </div>
+        </Media>
+
+        {e.text}
+      </Media>
+      {this.props.account &&
+        this.props.account.account &&
+        e.userId == this.props.account.account.id &&
+        <React.Fragment>
+          {" "}{" "}
+          <Button
+            outline
+            onClick={() => {
+              this.setState({
+                beingedited: e.id,
+                editComment: picture.comments.filter(f => f.id == e.id)[0].text,
+              });
+            }}
+          >
+            Edit
+          </Button>{" "}
+          {" "}
+          <Button
+            outline
+            onClick={() => this.props.deleteComment(picture.id, e.id)}
+          >
+            Delete
+          </Button>
+        </React.Fragment>}
+    </Media>;
+
+  getLikes: any = (picture, tag) => {
+    if (!tag) {
+      return [];
+    }
+    return picture.tagCounters.filter(
+      f => f.tagId == tag.id && f.userId == this.props.account.account.id
+    );
+  };
 
   render = () => {
     if (!this.props.pictures) {
@@ -51,8 +120,31 @@ class Photo extends React.Component<any> {
       picture = picture[0];
     }
     console.log(picture);
+    let beforeComments = [];
+    let afterComments = [];
+    if (picture.comments) {
+      let index = this.findWithAttr(
+        picture.comments,
+        "id",
+        this.state["beingedited"]
+      );
+      if (index == -1) {
+        beforeComments = picture.comments;
+      } else {
+        beforeComments = picture.comments.slice(0, index);
+        afterComments = picture.comments.slice(index + 1);
+      }
+    }
     return (
       <div role="main">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <a onClick={() => history.push("/")} href="javascript:void()">
+              Home
+            </a>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>Photo</BreadcrumbItem>
+        </Breadcrumb>
         <Jumbotron>
           <Card>
             <CardImg
@@ -65,34 +157,109 @@ class Photo extends React.Component<any> {
               <CardTitle>
                 {picture.name}
               </CardTitle>
-              <CardSubtitle>
-                {picture.created}
+              <CardSubtitle className="text-muted">
+                Uploaded {ta.ago(new Date(picture.created))}
               </CardSubtitle>
               <CardText>
                 {picture.description}
               </CardText>
-              <Button onClick={() => this.props.history.push('/editphoto/' + picture.id)}>Edit</Button>
-              <Button onClick={() => this.props.deletePicture(picture.id)}>Delete</Button>
+              {this.props.account &&
+                this.props.account.account &&
+                this.props.account.account.id &&
+                picture.tagCounters &&
+                  this.props.tags && this.props.tags.map(e =>
+                    <React.Fragment key={e.id}>
+                      <Button
+                        outline={this.getLikes(picture, e).length == 0}
+                        onClick={() => {
+                          if (this.getLikes(picture, e).length == 0) {
+                            this.props.addTagCounter(picture.id, e.id);
+                          } else {
+                            this.props.deleteTagCounter(
+                              picture.id,
+                              this.getLikes(picture, e)[0].id
+                            );
+                          }
+                        }}
+                        color="info"
+                      >
+                        {e.name}:
+                        {
+                          picture.tagCounters.filter(f => f.tagId == e.id)
+                            .length
+                        }
+                      </Button>
+                    </React.Fragment>
+                  )}
+              {this.props.account.account && this.props.account.account.id == picture.userId &&
+                <React.Fragment>
+                  <hr />
+                  <div>Management options:</div>
+                  <Button
+                    color="primary"
+                    outline
+                    onClick={() =>
+                      this.props.history.push("/editphoto/" + picture.id)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    color="danger"
+                    outline
+                    onClick={() => this.props.deletePicture(picture.id)}
+                  >
+                    Delete
+                  </Button>
+                </React.Fragment>}
             </CardBody>
           </Card>
         </Jumbotron>
         <Jumbotron>
-          Comments:
-          {picture.comments && picture.comments.map(e =>
-            <Media style={{ border: "1px black solid" }} key={e.id}>
-              <Media body>
-                <Media heading>{e.text}</Media>
-                {e.created}
-              </Media>
-            </Media>
-          )}
-          <Form onSubmit={this.submitForm}>
+          <h2>Comments:</h2>
+          {beforeComments.map(e => this.commentRender(picture, e))}
+          {this.state["beingedited"] > -1 &&
+            <React.Fragment>
+              <Input
+                type="textarea"
+                name="editcomment"
+                onChange={e => this.setState({ editComment: e.target.value })}
+                value={this.state["editComment"]}
+              />
+              <Button
+                onClick={() => {
+                  this.props.editComment(
+                    picture.id,
+                    picture.comments.filter(
+                      e => e.id == this.state["beingedited"]
+                    )[0],
+                    this.state["editComment"]
+                  );
+                  this.setState({ beingedited: -1 });
+                }}
+              >
+                Save
+              </Button>
+            </React.Fragment>}
+          {afterComments.map(e => this.commentRender(picture, e))}
+          <hr />
+          {this.props.account.account && <Form onSubmit={this.submitForm}>
             <FormGroup>
-              <Label for="exampleText">Express your thoughts about this image below</Label>
-              <Input type="textarea" name="text" id="exampleText" />
+              <Label
+                for="exampleText"
+                style={{ textAlign: "center", textSize: "50" }}
+              >
+                Express your thoughts about this image below
+              </Label>
+              <Input
+                type="textarea"
+                name="text"
+                id="exampleText"
+                onChange={e => this.setState({ newComment: e.target.value })}
+                value={this.state["newComment"]}
+              />
             </FormGroup>
-            <Button >Submit</Button>
-          </Form>
+            <Button>Comment</Button>
+          </Form>}
         </Jumbotron>
       </div>
     );
@@ -100,6 +267,14 @@ class Photo extends React.Component<any> {
 }
 
 export default connect(
-  state => state["pictures"], // Selects which state properties are merged into the component's props
-  {...CommentsStore.actionCreators, ...PicturesStore.actionCreators}
+  state => ({
+    pictures: state["pictures"].pictures,
+    account: state["account"],
+    tags: state["tags"],
+  }), // Selects which state properties are merged into the component's props
+  {
+    ...CommentsStore.actionCreators,
+    ...PicturesStore.actionCreators,
+    ...TagsStore.actionCreators,
+  }
 )(Photo);
